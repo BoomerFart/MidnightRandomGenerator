@@ -11,6 +11,7 @@ public class Runner{
 		Scanner s = new Scanner(System.in);
 		//fill this array with members from your alliance
 		String[] members = {"Boomer","Iowned","KidClutch","Kacchan","Kashichi","KBO","CrowLeyZz","Milla","creati","Rizzy","Krau","Trafalgar Law","Merxzzz","Banagher","JmMacz","Kagami","DillOne","Abama","Krawless","Kenpachira","Dremaker","Ayanokouji","JEduardo564","IsaccRecord","Isackhero","Miki","Argenfreak","khryzthyan","Boredom","Krolm","Zaraki","ZhadeWolf","VICKY02", "Albequergui","David","Float","jdow","kegclap","Maleaha","Mathz","Rolando","silverCloud","sirAnek","SMAAAASH","SonLucas","Uzui","Yoshyzin" };
+		//String[] members = {"Khryz"};
 		int memberCount = members.length;
 		//update this array when new units are added. Last updated: Dabi
 		String[] units = {"Aizawa","Ochaco","Kirishima","Kaminari","Deku","Ojiro","Endev","Tokoyami","Iida","Froppy","Mineta","All Might","Stain","Todoroki","Bakugo","Momo","Shigaraki","Hawks","Mina","Dabi"};
@@ -23,7 +24,7 @@ public class Runner{
 		//String change;
 		//String name;
 		char retry;
-		System.out.println(memberCount);
+		//System.out.println(memberCount);
 		do {
 		System.out.println("Program use?\nValid answers member, unit, war");
 		String resp = s.next();
@@ -75,9 +76,10 @@ public class Runner{
 			}
 			System.out.println("Backup Units to choose:");
 			System.out.println(res1);
-			System.out.println("\n\n\nUnit Chosen: ");
+			System.out.println("\n@"+chosen+" your name was picked today. Please ping me which unit you would like us to start the war tonight off with. If someone doesnt have the unit you choose, they can pick a unit from the back up units list. The unit you select does not have to be from that list, feel free to choose whoever you want.");
+			System.out.println("\nUnit Chosen: ");
 			String cUnit = s.next();
-			System.out.println("@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit+"**, as chosen by **"+chosen+"**. If he falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\n\n\n\n");
+			System.out.println("\n@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit+"**, as chosen by **"+chosen+"**. If he falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\n\n\n\n");
 			break;
 		
 		
