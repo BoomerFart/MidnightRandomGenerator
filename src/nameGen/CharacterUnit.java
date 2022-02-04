@@ -15,5 +15,10 @@ public class CharacterUnit {
 	public String getPronoun() {
 		return pronoun;
 	}
+	
+	public String getWritable() {
+		String r = name + "," + pronoun;
+		return r;
+	}
 
 }
