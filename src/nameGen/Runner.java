@@ -149,8 +149,6 @@ public class Runner{
 			break;
 			
 		case "REMOVE":
-			FileWriter fw = new FileWriter(mem);
-			BufferedWriter bwr = new BufferedWriter(fw);
 			char repea = 'y';
 			System.out.println("Remove a unit or a member of the Alliance? Valid answers member, unit");
 			change = s.next();
@@ -159,6 +157,8 @@ public class Runner{
 			switch(change) {
 				
 			case "MEMBER":
+				FileWriter fw = new FileWriter(mem);
+				BufferedWriter bwr = new BufferedWriter(fw);
 				do {
 						System.out.println("Current Members List:");
 						for(int i = 0; i<members.size()-1; i++) {
