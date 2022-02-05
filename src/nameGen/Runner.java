@@ -12,9 +12,6 @@ import java.io.IOException;
 
 
 public class Runner{
-	/*TODO:
-	 * Look into making Members and Units accept files so they're easier to keep track of
-	 */
 	public static void main(String[] args)throws IOException {
 		//variables
 		Random r = new Random();
