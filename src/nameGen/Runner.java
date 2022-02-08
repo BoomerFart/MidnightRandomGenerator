@@ -63,10 +63,13 @@ public class Runner{
 		
 		
 		//Main Code
+		exitable:
 		do {
-		System.out.println("\nProgram use?\nValid answers member - selects a random alliance member\nunit - selects random unit from units list\nwar - selects a Random alliance member and outputs list of backup units.\nadd - add a new member or unit to existing list\nremove - remove member or unit from existing list");
+		System.out.print("\n\tProgram use?\n\tValid answers \n\tmember - selects a random alliance member\n\tunit - selects random unit from units list\n\twar - selects a Random alliance member and outputs list of backup units.\n\tadd - add a new member or unit to existing list\n\tremove - remove member or unit from existing list\n\t");
 		String resp = s.nextLine();
 		resp = resp.toUpperCase();
+		if(resp.toLowerCase().equals("exit"))
+			break exitable;
 		
 		switch(resp) {
 		case "MEMBER":
@@ -82,7 +85,9 @@ public class Runner{
 			
 		case "WAR":
 			//use war function to do stuffs
-			warFunction(members, warunits, unitList, r, members.size(), warUnitCount, s);
+			String ex = warFunction(members, warunits, unitList, r, members.size(), warUnitCount, s);
+			if(ex.equals("exit"))
+					break exitable;
 			break;
 		
 		
@@ -96,6 +101,8 @@ public class Runner{
 			System.out.println("Add a unit or a member of the Alliance? Valid answers member, unit");
 			change = s.nextLine();
 			change = change.toUpperCase();
+			if(change.toLowerCase().equals("exit"))
+				break exitable;
 			System.out.println(change);
 			switch(change) {
 				
@@ -109,6 +116,17 @@ public class Runner{
 					
 						System.out.print("Input name(case sensitive): ");
 						name = s.nextLine();
+						if(name.toLowerCase().equals("exit")) {
+							//output entire arraylist to file
+							for(int i = 0;i<members.size(); i++) {
+								bw.write(members.get(i));
+								bw.newLine();
+							}
+							//close scanners for file
+							bw.close();
+							wr.close();
+							break exitable;
+						}
 						members.add(name);
 						System.out.print(name);
 						System.out.println(" added to members list. Add another member? y/n");
@@ -136,8 +154,32 @@ public class Runner{
 				do {
 					System.out.print("Input name(case sensitive): ");
 					name = s.nextLine();
+					if(name.toLowerCase().equals("exit")) {
+						for(int i = 0;i<unitList.size()-1; i++) {
+							bwUnit.write(unitList.get(i).getWritable());
+							bwUnit.newLine();
+						}
+						bwUnit.write(unitList.get(unitList.size()-1).getWritable());
+						
+						//close scanners for file
+						bwUnit.close();
+						wrUnit.close();
+						break exitable;
+					}
 					System.out.print("Input Pronoun: ");
 					String pronoun = s.nextLine().toLowerCase();
+					if(pronoun.toLowerCase().equals("exit")) {
+						for(int i = 0;i<unitList.size()-1; i++) {
+							bwUnit.write(unitList.get(i).getWritable());
+							bwUnit.newLine();
+						}
+						bwUnit.write(unitList.get(unitList.size()-1).getWritable());
+						
+						//close scanners for file
+						bwUnit.close();
+						wrUnit.close();
+						break exitable;
+					}
 					CharacterUnit addChar = new CharacterUnit(name,pronoun);
 					unitList.add(addChar);
 					System.out.print(name);
@@ -168,7 +210,10 @@ public class Runner{
 			
 			//Determine if removing from Member or Unit ArrayList
 			System.out.println("Remove a unit or a member of the Alliance? Valid answers member, unit");
-			change = s.next();
+			change = s.nextLine();
+			if(change.toLowerCase().equals("exit")) {
+				break exitable;
+			}
 			change = change.toUpperCase();
 			System.out.println(change);
 			switch(change) {
@@ -187,6 +232,18 @@ public class Runner{
 						System.out.println(members.get(members.size()-1));
 						System.out.print("Input name(case sensitive): ");
 						name = memNameValidation(s,members);
+						if(name.equals("exit")) {
+							for(int i = 0;i<members.size()-1; i++) {
+								bwr.write(members.get(i));
+								bwr.newLine();
+							}
+							bwr.write(members.get(members.size()-1));
+							
+							//close scanners for file
+							bwr.close();
+							fw.close();
+							break exitable;
+						}
 						members.remove(name); // remove
 						System.out.print(name);
 						System.out.println(" removed from members list.");
@@ -218,7 +275,31 @@ public class Runner{
 				do {
 				System.out.print("Input name: ");
 				String n = s.nextLine();
+				if(n.toLowerCase().equals("exit")) {
+					for(int i = 0;i<unitList.size()-1; i++) {
+						bwUnit.write(unitList.get(i).getWritable());
+						bwUnit.newLine();
+					}
+					bwUnit.write(unitList.get(unitList.size()-1).getWritable());
+					
+					//close scanners for file
+					bwUnit.close();
+					wrUnit.close();
+					break exitable;
+				}
 				CharacterUnit removeUnit = charNameValidation(n, unitList, s);
+				if(removeUnit.getName().equals("exit")) {
+					for(int i = 0;i<unitList.size()-1; i++) {
+						bwUnit.write(unitList.get(i).getWritable());
+						bwUnit.newLine();
+					}
+					bwUnit.write(unitList.get(unitList.size()-1).getWritable());
+					
+					//close scanners for file
+					bwUnit.close();
+					wrUnit.close();
+					break exitable;
+				}
 				unitList.remove(removeUnit);  // remove
 				System.out.println(removeUnit.getName()+" removed. Remove another unit? y/n");
 				repea = s.nextLine().charAt(0);
@@ -269,9 +350,8 @@ public class Runner{
 		
 		//See if need to run program again
 		System.out.println("Would you like to run again? Y/N");
-		retry = s.next().charAt(0);
+		retry = s.nextLine().charAt(0);
 		retry = Character.toLowerCase(retry);
-		s.nextLine();
 		}while(retry == 'y'); //do while loop to allow repeating
 		
 		s.close(); // close main scanner
@@ -293,10 +373,10 @@ public static CharacterUnit randSelectUnit(ArrayList<CharacterUnit> c, Random r,
 }
 
 //Select random Member(use function from before), select 4/5 random units from the easier/more likely to have list.
-public static void warFunction(ArrayList<String> m, String[] w, ArrayList<CharacterUnit> c, Random r, int memberCount, int warUnitCount, Scanner s) {
+public static String warFunction(ArrayList<String> m, String[] w, ArrayList<CharacterUnit> c, Random r, int memberCount, int warUnitCount, Scanner s) {
 	ArrayList<String> res1 = new ArrayList<String>();
 	String chosen = randSelectMemb(m, r, memberCount);
-	System.out.println(chosen);
+	System.out.println("\n\t"+chosen+"\n");
 	
 	//while loops making and validating the backup units array.
 	res1.add(w[r.nextInt(warUnitCount)]);
@@ -322,7 +402,7 @@ public static void warFunction(ArrayList<String> m, String[] w, ArrayList<Charac
 	}
 	
 	//Display backup units array
-	System.out.println("Backup Units to choose:");
+	System.out.print("\tBackup Units to choose:\n\t");
 	System.out.println(res1);
 	
 	//Make discord message informing person who was picked they were picked.
@@ -331,10 +411,16 @@ public static void warFunction(ArrayList<String> m, String[] w, ArrayList<Charac
 	//Get unit chosen(manual entry cuz fuck you that's why). send to unit name validation.
 	System.out.println("\nUnit Chosen: ");
 	String cString = s.nextLine();
+	if(cString.toLowerCase().equals("exit")) {
+		return "exit";
+	}
 	CharacterUnit cUnit = charNameValidation(cString, c, s);
+	if(cUnit.getName().equals("exit"))
+		return "exit";
 	
 	//Make discord message for group(change the "@Midnight Hero" to whatever tag
 	System.out.println("\n@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit.getName()+"**, as chosen by **"+chosen+"**. If "+cUnit.getPronoun()+" falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit.getName()+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\n\n\n\n");
+	return "ok";
 }
 
 //take input string compare with the CharacterUnit ArrayList's Name values.
@@ -361,6 +447,8 @@ public static CharacterUnit charNameValidation(String n, ArrayList<CharacterUnit
 		//have name be reinput and recursive call function.
 		System.out.println(c.get(c.size()-1).getName()+"\nPlease input a valid name.");
 		f = s.nextLine();
+		if(f.toLowerCase().equals("exit"))
+			return new CharacterUnit("exit","exit");
 		name = charNameValidation(f, c, s); //set return value to be result of this recursive call since it'll have to return a valid value eventually
 	}
 	return name;
@@ -370,6 +458,8 @@ public static CharacterUnit charNameValidation(String n, ArrayList<CharacterUnit
 public static String memNameValidation(Scanner s, ArrayList<String> m) {
 	//Variables
 	String name = s.nextLine();
+	if(name.toLowerCase().equals("exit"))
+		return "exit";
 	boolean match = false;
 	
 	//do-while loop getting match
@@ -386,6 +476,9 @@ public static String memNameValidation(Scanner s, ArrayList<String> m) {
 			if(match == false) {
 				System.out.println("Name " + name + " was not found. Please input a name from the list.(This is case sensitive):");	
 				name= s.nextLine();
+				if(name.toLowerCase().equals("exit"))
+					return "exit";
+				
 			}
 		
 	}while(match == false);
