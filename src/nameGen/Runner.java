@@ -454,6 +454,13 @@ public static String warFunction(ArrayList<String> m, String[] w, ArrayList<Char
 	//Make discord message for group(change the "@Midnight Hero" to whatever tag)
 	System.out.println("\n@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit.getName()+"**, as chosen by **"+chosen+"**. If "+cUnit.getPronoun()+" falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit.getName()+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\nEn Espanol: Para aquellos que participen en la guerra de clanes esta noche, por favor, que su primera unidad sea  **"+cUnit.getName()+"**, seleccionada por **"+chosen+"**. Si es derrotada eres libre de usar a quien quieras para vengar tu pérdida. Si no tienes a **"+cUnit.getName()+"**, por favor usa una de las \"Unidades de Respaldo\" recomendadas en la publicación anterior.\n\n\n");
 	//Credit to Abama(AKA WingHero on Discord) for the Spanish translations
+	if(t.size() < 12) {
+		t.add(chosen);
+	}
+	if(t.size() >= 12) {
+		t.add(chosen);
+		t.remove(0);
+		}
 	return "ok";
 }
 
@@ -526,13 +533,6 @@ public static Boolean notInLast12Members(String name, ArrayList<String> t) {
 			return false;
 			
 	}
-		if(t.size() < 12) {
-			t.add(name);
-		}
-		if(t.size() >= 12) {
-			t.add(name);
-			t.remove(0);
-			}
 		return true;
 		}
 
