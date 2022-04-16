@@ -18,6 +18,7 @@ public class Runner{
 		Scanner s = new Scanner(System.in);
 		File mem = new File("members.csv");
 		File un = new File("units.csv");
+		File tw = new File("twelve.csv");
 		
 		//Import members.csv
 		Scanner fileMem = new Scanner(mem);
@@ -62,7 +63,7 @@ public class Runner{
 		//Main Code
 		exitable:
 		do {
-		System.out.print("\n\tProgram use?\n\tValid answers \n\tmember - selects a random alliance member\n\tunit - selects random unit from units list\n\twar - selects a Random alliance member and outputs list of backup units.\n\tadd - add a new member or unit to existing list\n\tremove - remove member or unit from existing list\n\t");
+		System.out.print("\n\tProgram use?\n\tValid answers \n\tmember - selects a random alliance member\n\tmembercount - get count of members in members list\n\tunit - selects random unit from units list\n\twar - selects a Random alliance member and outputs list of backup units.\n\tadd - add a new member or unit to existing list\n\tremove - remove member or unit from existing list\n\t");
 		String resp = s.nextLine();
 		resp = resp.toUpperCase();
 		if(resp.toLowerCase().equals("exit"))
@@ -73,6 +74,17 @@ public class Runner{
 			//create array with all the names of members then use random function to select a random name and print that name
 						System.out.println(randSelectMemb(members, r, members.size()));
 			break;
+		case "MEMBERCOUNT":
+			System.out.println(members.size()+" members in list. Would you like to see the full list? y/n \n");
+			String response = s.nextLine();
+			if(response.toLowerCase().equals("exit"))
+				break exitable;
+			char res = response.charAt(0);
+			if(res == 'y' || res == 'Y') {
+				for(int i = 0; i<=members.size()-1; i++) 
+					System.out.println(members.get(i));
+			}
+			break;
 			
 		case "UNIT":
 			//use units array and random function to select random unit
@@ -82,9 +94,27 @@ public class Runner{
 			
 		case "WAR":
 			//use war function to do stuffs
-			String ex = warFunction(members, warunits, unitList, r, members.size(), warUnitCount, s);
+			Scanner fileTw= new Scanner(tw);
+			ArrayList<String> twelve = new ArrayList<String>();
+			while(fileTw.hasNextLine()) {
+				twelve.add(fileTw.nextLine());
+			}
+			fileTw.close();
+			for(int i=0;i<twelve.size();i++)
+				twelve.get(i);
+			String ex = warFunction(members, warunits, unitList, r, members.size(), warUnitCount, s, twelve);
 			if(ex.equals("exit"))
 					break exitable;
+			FileWriter twWr = new FileWriter(tw);
+			BufferedWriter twBw = new BufferedWriter(twWr);
+			for(int i = 0;i<twelve.size(); i++) {
+				twBw.write(twelve.get(i));
+				twBw.newLine();
+			}
+			//close scanners for file
+			twBw.close();
+			twWr.close();
+			
 			break;
 		
 		
@@ -370,9 +400,15 @@ public static CharacterUnit randSelectUnit(ArrayList<CharacterUnit> c, Random r,
 }
 
 //Select random Member(use function from before), select 4/5 random units from the easier/more likely to have list.
-public static String warFunction(ArrayList<String> m, String[] w, ArrayList<CharacterUnit> c, Random r, int memberCount, int warUnitCount, Scanner s) {
+public static String warFunction(ArrayList<String> m, String[] w, ArrayList<CharacterUnit> c, Random r, int memberCount, int warUnitCount, Scanner s, ArrayList<String> t) {
 	ArrayList<String> res1 = new ArrayList<String>();
-	String chosen = randSelectMemb(m, r, memberCount);
+	Boolean nil12 = false;
+	String chosen = "";
+	System.out.println("\n\n"); //spacing to make look prettier :)
+	while(nil12 != true){
+	chosen = randSelectMemb(m, r, memberCount);
+	nil12 = notInLast12Members(chosen,t);
+	}
 	System.out.println("\n\t"+chosen+"\n");
 	
 	//while loops making and validating the backup units array.
@@ -402,9 +438,9 @@ public static String warFunction(ArrayList<String> m, String[] w, ArrayList<Char
 	System.out.print("\tBackup Units to choose:\n\t");
 	System.out.println(res1);
 	
-	//Make discord message informing person who was picked they were picked.
-	System.out.println("\n@"+chosen+" your name was picked today. Please ping me which unit you would like us to start the war tonight off with. If someone doesnt have the unit you choose, they can pick a unit from the back up units list. The unit you select does not have to be from that list, feel free to choose whoever you want.");
-	
+	//Make discord message informing person who was picked they were picked. Separate languages with \n(newline character) to make easier to differentiate.
+	System.out.println("\n@"+chosen+" your name was picked today. Please ping me which unit you would like us to start the war tonight off with. If someone doesnt have the unit you choose, they can pick a unit from the back up units list. The unit you select does not have to be from that list, feel free to choose whoever you want.\n\nEn Español: @"+chosen+" tu nombre fue seleccionado hoy. Hazme saber con qué unidad te gustaría que comencemos la guerra de clanes esta noche, por favor. Si alguien no tiene la unidad seleccionada, puede elegir un personaje de la lista de unidades de respaldo.");
+	//Credit to Abama(AKA WingHero on Discord) for the Spanish translations
 	//Get unit chosen(manual entry cuz fuck you that's why). send to unit name validation.
 	System.out.println("\nUnit Chosen: ");
 	String cString = s.nextLine();
@@ -415,8 +451,9 @@ public static String warFunction(ArrayList<String> m, String[] w, ArrayList<Char
 	if(cUnit.getName().equals("exit"))
 		return "exit";
 	
-	//Make discord message for group(change the "@Midnight Hero" to whatever tag
-	System.out.println("\n@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit.getName()+"**, as chosen by **"+chosen+"**. If "+cUnit.getPronoun()+" falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit.getName()+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\n\n\n\n");
+	//Make discord message for group(change the "@Midnight Hero" to whatever tag)
+	System.out.println("\n@Midnight Hero For those participating in war tonight, please have your first unit be **"+cUnit.getName()+"**, as chosen by **"+chosen+"**. If "+cUnit.getPronoun()+" falls you're free to use whoever you may to avenge your loss. If you don't have **"+cUnit.getName()+"**, please use one of the other recommended \"Backup Units\" from the post above.\n\nEn Espanol: Para aquellos que participen en la guerra de clanes esta noche, por favor, que su primera unidad sea  **"+cUnit.getName()+"**, seleccionada por **"+chosen+"**. Si es derrotada eres libre de usar a quien quieras para vengar tu pérdida. Si no tienes a **"+cUnit.getName()+"**, por favor usa una de las \"Unidades de Respaldo\" recomendadas en la publicación anterior.\n\n\n");
+	//Credit to Abama(AKA WingHero on Discord) for the Spanish translations
 	return "ok";
 }
 
@@ -482,6 +519,22 @@ public static String memNameValidation(Scanner s, ArrayList<String> m) {
 	return name;
 
 }
+
+public static Boolean notInLast12Members(String name, ArrayList<String> t) {
+	for(int i = 0;i<t.size();i++) {
+		if(name.equals(t.get(i)))
+			return false;
+			
+	}
+		if(t.size() < 12) {
+			t.add(name);
+		}
+		if(t.size() >= 12) {
+			t.add(name);
+			t.remove(0);
+			}
+		return true;
+		}
 
 }
 
